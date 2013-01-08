@@ -1,7 +1,7 @@
 # jQuery SVG-PieTimer
 
 jQuery SVG-PieTimer is a lightweight jQuery plugin that injects a SVG-based pie timer into a specified element.  
-This plugin has accessible functions to draw, play, pause, stop and reset the timer.  
+This plugin has available functions to draw, play, pause, stop and reset the timer.  
 Its timer uses an actual timekeeping by polling current time (as use of `setInterval()` only is not fully reliable for actual timekeeping).
 
 
