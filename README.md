@@ -4,6 +4,8 @@ jQuery SVG-PieTimer is a lightweight jQuery plugin that injects a SVG-based pie 
 This plugin has available functions to draw, play, pause, stop and reset the timer.  
 Its timer uses an actual timekeeping by polling current time (as use of `setInterval()` only is not fully reliable for actual timekeeping).
 
+[**Demo page**](http://yohannrub.github.com/jquery.svg-pietimer/)
+
 
 ## Usage
 
@@ -37,19 +39,19 @@ Some options can be passed at initialization (the following values are defaults)
 ```javascript
 // Will inject pietimer into #element with passed options
 $('#element').pietimer({
-    duration: 5000,           // duration of one revolution (in ms)
-    refreshInterval: 50,      // frequency of timer refreshes (in ms)
-    loop: false,              // whether to loop indefinitely (true) or not (false)
-    callback: function() {},  // function to be called after each loop
-    centerRadius: 33,         // radius of the static inner disc of the pietimer (any integer between 0 and 50)
-    cssClass: 'pietimer'      // css class to apply to the injected SVG element
+    duration: 5000,          // duration of one revolution (in ms)
+    refreshInterval: 50,     // frequency of timer refreshes (in ms)
+    loop: false,             // whether to loop indefinitely (true) or not (false)
+    callback: function(){},  // function to be called after each loop
+    centerRadius: 33,        // radius of the static inner disc of the pietimer (any integer between 0 and 50)
+    cssClass: 'pietimer'     // CSS class to apply to the injected SVG element
 });
 ```
 
 
 ## Styling
 
-The SVG-based pietimer element can be styled using the css class passed at initialization (defaults to 'pietimer').
+The SVG-based pietimer element can be styled using the CSS class passed at initialization (defaults to 'pietimer').
 
 It contains itself two SVG elements:
 
