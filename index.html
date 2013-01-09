@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+    svg.pietimer {
+      width: 100px;
+      height: 100px;
+    }
+    svg.pietimer path {
+      fill: #cccccc;
+    }
+    svg.pietimer circle {
+      fill: #cccccc;
+      stroke: #ffffff;
+      stroke-width: 10;
+    }
+    </style>
+</head>
+
+<body>
+
+<div>
+    <input id="timing-play" type="button" value="Play" />
+    <input id="timing-pause" type="button" value="Pause" />
+    <input id="timing-stop" type="button" value="Stop" />
+    <input id="timing-reset" type="button" value="Reset" />
+    <input id="timing-draw" type="button" value="Draw random" />
+</div>
+
+<div id="pietimer-container"></div>
+
+<script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
+<script src="../jquery.svg-pietimer.min.js"></script>
+<script>
+var $pietimerContainer = $('#pietimer-container');
+
+// Initialize pietimer
+$pietimerContainer.pietimer();
+
+// Timing action handlers
+$('#timing-play').click(function() {
+    $pietimerContainer.pietimer('play');
+});
+$('#timing-pause').click(function() {
+    $pietimerContainer.pietimer('pause');
+});
+$('#timing-stop').click(function() {
+    $pietimerContainer.pietimer('stop');
+});
+$('#timing-reset').click(function() {
+    $pietimerContainer.pietimer('reset');
+});
+$('#timing-draw').click(function() {
+    $pietimerContainer.pietimer('draw', Math.random());
+});
+</script>
+</body>
+</html>
