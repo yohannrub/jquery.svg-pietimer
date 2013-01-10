@@ -69,6 +69,6 @@ svg.pietimer path {
 svg.pietimer circle {
   fill: #cccccc;
   stroke: #ffffff;
-  stroke-width: 10;
+  stroke-width: 10px;
 }
 ```
