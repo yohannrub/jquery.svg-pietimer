@@ -1,5 +1,5 @@
 /*!
- * jQuery SVG-PieTimer v@1.0
+ * jQuery SVG-PieTimer v@1.1
  * https://github.com/yohannrub/jquery.svg-pietimer
  * Licensed under the MIT license
  */
@@ -10,7 +10,8 @@
         duration: 5000,
         refreshInterval: 50,
         loop: false,
-        callback: $.noop,
+        loopCallback: $.noop,
+        refreshCallback: $.noop,
         centerRadius: 33,
         cssClass: 'pietimer'
     };
@@ -21,6 +22,11 @@
     GLOBALS.svgPathD = 'M 0 0 v -' + GLOBALS.radius + ' A ' + GLOBALS.radius + ' ' + GLOBALS.radius + ' 1 ';
 
     var namespace = 'pietimer';
+
+    function mod(num, modulo) {
+        var remain = num % modulo;
+        return (remain >= 0 ? remain : remain + modulo);
+    }
 
     var methods = {
         init: function(options) {
@@ -36,37 +42,56 @@
             $(svgHtml).appendTo(this);
 
             return this.each(function() {
-                var $this = $(this);
-                var data = $.extend({}, options);
+                var $this = $(this),
+                    data = $.extend({}, options);
 
                 data.isPlaying = false;
                 data.timerInterval = null;
                 data.timeStart = null;
                 data.timePause = null;
+                data.ratio = 0;
                 data.$svgPath = $this.find('path');
 
                 $this.data(namespace, data);
             });
         },
 
-        draw: function(ratio) {
+        drawPath: function(ratio) {
             return this.each(function() {
-                var $this = $(this);
-                var data = $this.data(namespace);
+                var $this = $(this),
+                    data = $this.data(namespace);
+
+                ratio = mod(ratio, 1);
 
                 var angle = ratio * 2 * Math.PI,
                 x = Math.sin(angle) * GLOBALS.radius,
                 y = Math.cos(angle) * -GLOBALS.radius,
-                mid = (ratio % 1 > 0.5) ? 1 : 0,
+                mid = (ratio > .5) ? 1 : 0,
                 anim = GLOBALS.svgPathD + mid + ' 1 ' + x + ' ' + y + ' z';
+
+                data.ratio = ratio;
                 data.$svgPath.attr('d', anim);
+                data.refreshCallback.call($this);
+            });
+        },
+
+        draw: function(ratio) {
+            return this.each(function() {
+                var $this = $(this),
+                    data = $this.data(namespace);
+
+                ratio = mod(ratio, 1);
+
+                data.timePause = $.now();
+                data.timeStart = data.timePause - data.duration * ratio;
+                $this[namespace]('drawPath', ratio);
             });
         },
 
         play: function() {
             return this.each(function() {
-                var $this = $(this);
-                var data = $this.data(namespace);
+                var $this = $(this),
+                    data = $this.data(namespace);
 
                 if (!data.isPlaying) {
                     data.isPlaying = true;
@@ -75,17 +100,18 @@
                     data.timerInterval = setInterval(function() {
                         var ratio = ($.now() - data.timeStart) / data.duration;
                         if (ratio >= 1) {
-                            data.callback.call($this);
                             if (data.loop) {
                                 data.timeStart = data.timeStart + data.duration * Math.floor(ratio);
+                                data.loopCallback.call($this);
                             } else {
-                                $this[namespace]('draw', 0.99999);
                                 $this[namespace]('pause');
                                 data.timeStart = data.timePause = null;
+                                $this[namespace]('drawPath', .99999);
+                                data.loopCallback.call($this);
                                 return;
                             }
                         }
-                        $this[namespace]('draw', ratio);
+                        $this[namespace]('drawPath', ratio);
                     }, data.refreshInterval);
                 }
             });
@@ -93,8 +119,8 @@
 
         pause: function() {
             return this.each(function() {
-                var $this = $(this);
-                var data = $this.data(namespace);
+                var $this = $(this),
+                    data = $this.data(namespace);
 
                 if (data.isPlaying) {
                     data.isPlaying = false;
@@ -106,24 +132,28 @@
 
         stop: function() {
             return this.each(function() {
-                var $this = $(this);
-                var data = $this.data(namespace);
+                var $this = $(this),
+                    data = $this.data(namespace);
 
                 $this[namespace]('pause');
                 data.timeStart = data.timePause = null;
-                $this[namespace]('draw', 0);
+                $this[namespace]('drawPath', 0);
             });
         },
 
         reset: function() {
             return this.each(function() {
-                var $this = $(this);
-                var data = $this.data(namespace);
+                var $this = $(this),
+                    data = $this.data(namespace);
 
                 $this[namespace]('pause');
                 data.timeStart = data.timePause = null;
                 $this[namespace]('play');
             });
+        },
+
+        getCurrentRatio: function() {
+            return this.data(namespace).ratio;
         }
     };
 
