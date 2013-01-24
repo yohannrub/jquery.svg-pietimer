@@ -14,6 +14,13 @@
       stroke: #ffffff;
       stroke-width: 10px;
     }
+
+    #pietimer-loopCallback {
+        display: none;
+        background-color: #ffffe0;
+        border: 2px solid red;
+        font-weight: bold;
+    }
     </style>
 </head>
 
@@ -25,17 +32,34 @@
     <input id="timing-stop" type="button" value="Stop" />
     <input id="timing-reset" type="button" value="Reset" />
     <input id="timing-draw" type="button" value="Draw random" />
+    <span>
+        <label>Ratio:</label>
+        <input id="pietimer-ratio" type="text" />
+        <span>(Press ENTER to validate change)</span>
+    </span>
 </div>
 
 <div id="pietimer-container"></div>
 
+<div id="pietimer-loopCallback">loopCallback called!</div>
+
 <script src="http://code.jquery.com/jquery-1.8.1.min.js"></script>
 <script src="../jquery.svg-pietimer.min.js"></script>
 <script>
-var $pietimerContainer = $('#pietimer-container');
+var $pietimerContainer = $('#pietimer-container'),
+    $pietimerRatio = $('#pietimer-ratio'),
+    $pietimerLoopCallback = $('#pietimer-loopCallback');
 
 // Initialize pietimer
-$pietimerContainer.pietimer();
+$pietimerContainer.pietimer({
+    loop: true,
+    loopCallback: function() {
+        $pietimerLoopCallback.stop().fadeTo(0, 1).fadeTo(2000, 0);
+    },
+    refreshCallback: function() {
+        $pietimerRatio.val($pietimerContainer.pietimer('getCurrentRatio'));
+    }
+});
 
 // Timing action handlers
 $('#timing-play').click(function() {
@@ -52,6 +76,16 @@ $('#timing-reset').click(function() {
 });
 $('#timing-draw').click(function() {
     $pietimerContainer.pietimer('draw', Math.random());
+});
+
+$pietimerRatio.keydown(function(e) {
+    if (e.which == 13) {
+        var pietimerRatio = parseFloat($pietimerRatio.val());
+        if ($.isNumeric(pietimerRatio)) {
+            $pietimerContainer.pietimer('draw', pietimerRatio);
+        }
+        return false;
+    }
 });
 </script>
 </body>
