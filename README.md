@@ -29,6 +29,9 @@ $('#element').pietimer('reset');
 
 // Will draw the pietimer with a ratio of 0.3 (can be any float between 0 and 1)
 $('#element').pietimer('draw', 0.3);
+
+// Will retrieve the current pietimer ratio (float between 0 and 1)
+var currentRatio = $('#element').pietimer('getCurrentRatio');
 ```
 
 
@@ -39,12 +42,13 @@ Some options can be passed at initialization (the following values are defaults)
 ```javascript
 // Will inject pietimer into #element with passed options
 $('#element').pietimer({
-    duration: 5000,          // duration of one revolution (in ms)
-    refreshInterval: 50,     // frequency of timer refreshes (in ms)
-    loop: false,             // whether to loop indefinitely (true) or not (false)
-    callback: function(){},  // function to be called after each loop
-    centerRadius: 33,        // radius of the static inner disc of the pietimer (any integer between 0 and 50)
-    cssClass: 'pietimer'     // CSS class to apply to the injected SVG element
+    duration: 5000,                 // duration of one revolution (in ms)
+    refreshInterval: 50,            // frequency of timer refreshes (in ms)
+    loop: false,                    // whether to loop indefinitely (true) or not (false)
+    loopCallback: function(){},     // function to be called after each loop
+    refreshCallback: function(){},  // function to be called after each timer refresh
+    centerRadius: 33,               // radius of the static inner disc of the pietimer (any integer between 0 and 50)
+    cssClass: 'pietimer'            // CSS class to apply to the injected SVG element
 });
 ```
 
