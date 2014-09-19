@@ -141,6 +141,24 @@
             });
         },
 
+        update: function(options) {
+            options = $.extend({}, DEFAULT_SETTINGS, options);
+
+            return this.each(function() {
+                var $this = $(this),
+                    data = $.extend({}, options);
+
+                data.isPlaying = false;
+                data.timerInterval = null;
+                data.timeStart = null;
+                data.timePause = null;
+                data.ratio = 0;
+                data.$svgPath = $this.find('path');
+
+                $this.data(namespace, data);
+            });
+        },
+
         reset: function() {
             return this.each(function() {
                 var $this = $(this),
